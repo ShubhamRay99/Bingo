@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Resources {
+public class Resources { 
 
 	public int[][] generateNo(int element) {
 

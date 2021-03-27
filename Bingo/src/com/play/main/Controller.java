@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 import com.play.services.Resources;
 
-public class Controller {
+public class Controller { 
 
 	public static void main(String[] args) {
 		Resources resource = new Resources();
