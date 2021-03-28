@@ -1,5 +1,6 @@
 package com.play.main;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.play.services.Resources;
@@ -14,23 +15,64 @@ public class Controller {
 
 		Scanner sc = new Scanner(System.in);
 		
-		System.out.println("Enter the number of box on each row (recommended: 5) :");
-		int element = sc.nextInt();
-		int[][] box = resource.generateNo(element);
-		System.out.println("Here is your bingo chart : !!All the Best!!");
-		resource.printBox(box, bingo, element);
+		//players
 		
-		int num = -1;
-		while (true) {
-
-			System.out.println("Enter Your number : ");
-			num = sc.nextInt();
-
-			bingo = resource.crossElement(box, bingo, num); 
-			resource.printBox(box, bingo, element);
-
+		System.out.println("Enter the number of players : ");
+		int players;
+		try {
+			players = sc.nextInt();
+		} catch (InputMismatchException e) {
+			System.err.println("Enter players details in the form of 1, 2, 3, 4, etc.");
+			players = sc.nextInt();
 		}
+		
+		int player = 0;
+		
+		System.out.println("Enter the number of box on each row (recommended: 5) :");
+		int limit;
+		try {
+			limit = sc.nextInt();
+		} catch (InputMismatchException e) {
+			System.err.println("Enter number row/column size in numerical format.");
+			limit = sc.nextInt();
+		}
+		
+		int[][] box = resource.generateNo(limit);
+		
+		System.out.println("Here is your bingo chart : !!All the Best!!");
+		resource.printBox(box, bingo, limit);
+		
+		System.out.println("\n\n__Note__: \n\tYou can quit the game any time you want, by entering -1.\n\tRemember You are player 1.\n\n");
+		
+		int num = -2;
+		System.out.println("\n\nEnter number on behalf of Player "+(++player)+" : ");
+		try {
+			num = sc.nextInt();
+		} catch (InputMismatchException e) {
+			System.err.println("Enter numbers in numerical format.");
+			num = sc.nextInt();
+		}
+		while (num != -1) {
+			
+			if(player == players)
+				player = 0;
+			
+			bingo = resource.crossElement(box, bingo, num, limit); 
+			if(bingo == -1)
+				break;	//game over
+			
+			resource.printBox(box, bingo, limit);
 
+			System.out.println("\n\nEnter number on behalf of Player "+(++player)+" : ");
+			try {
+				num = sc.nextInt();
+			} catch (InputMismatchException e) {
+				System.err.println("Enter numbers in numerical format.");
+				num = sc.nextInt();
+			}
+		}
+		resource.printBox(box, limit, limit);	//final Print
+		sc.close();
 	}
 
 }

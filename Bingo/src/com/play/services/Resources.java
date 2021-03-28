@@ -4,7 +4,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Resources { 
+import com.play.customException.BingoException;
+
+public class Resources {
+
+	BingoException bingoException;
+
+	public Resources() {
+		bingoException = new BingoException();
+	}
 
 	public int[][] generateNo(int element) {
 
@@ -13,7 +21,7 @@ public class Resources {
 		for (int i = 1; i <= element * element; i++)
 			numbers.add(i);
 
-		 Collections.shuffle(numbers);
+		Collections.shuffle(numbers);
 
 		int[][] numArr = new int[element][element];
 
@@ -24,7 +32,14 @@ public class Resources {
 		return numArr;
 	}
 
-	public int crossElement(int[][] box, int bingo, int element) {
+	public int crossElement(int[][] box, int bingo, int element, int limit) {
+
+		try {
+			bingoException.userInputNumber(element, limit);
+		} catch (BingoException e) {
+			System.err.println(e.getMessage());
+			return bingo;
+		}
 
 		boolean leftDiago = false, rightDiago = false;
 
@@ -69,17 +84,15 @@ public class Resources {
 		strickCounter += (checkingBingoHorizontalAxis(box, I)) ? 1 : 0;
 		strickCounter += (checkingBingoVerticalAxis(box, J)) ? 1 : 0;
 
-		return validateBingo(strickCounter, bingo);
+		return validateBingo(strickCounter, bingo, limit);
 	}
 
-	private int validateBingo(int nowBingo, int prevBingo) {
-
+	private int validateBingo(int nowBingo, int prevBingo, int bingo) {
 
 		prevBingo += nowBingo;
-		
-		if (prevBingo == 5) {
-			System.out.println("!!BINGO!!");
-			System.exit(0);
+
+		if (prevBingo == bingo) {
+			return -1;
 		}
 		return prevBingo;
 	}
@@ -87,9 +100,9 @@ public class Resources {
 	private boolean checkingBingoVerticalAxis(int[][] box, int J) {
 
 		// checking the vertical line only
-			for (int i = 0, j = J; i < box[J].length; i++)
-				if (box[i][j] != 0)
-					return false;
+		for (int i = 0, j = J; i < box[J].length; i++)
+			if (box[i][j] != 0)
+				return false;
 		return true;
 	}
 
@@ -121,7 +134,7 @@ public class Resources {
 		return true;
 	}
 
-	public void printBox(int[][] box, int bingoCounter, int totalElements) {
+	public void printBox(int[][] box, int bingoCounter, int limit) {
 
 		for (int i = 0; i < box.length; i++) {
 			for (int j = 0; j < box[i].length; j++) {
@@ -129,15 +142,18 @@ public class Resources {
 			}
 			System.out.println();
 		}
-		
-		String[] bingo = {"B", "I", "N", "G", "O"};
-		
-		for (int i = 0; i < totalElements; i++) {
-			if(bingoCounter-- > 0)
-				System.out.printf("%-5s", bingo[i]);
+
+		String[] bingo = { "B", "I", "N", "G", "O" };
+
+		int i = 0, dupLimit = limit;
+		while (dupLimit-- > 0) {
+			if (i == bingo.length)
+				i = 0;
+
+			if (bingoCounter-- > 0)
+				System.out.printf("%-5s", bingo[i++]);
 			else
 				System.out.printf("%-5s", "-");
-				
 		}
 	}
 
