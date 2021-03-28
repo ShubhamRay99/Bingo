@@ -32,7 +32,7 @@ public class Resources {
 		return numArr;
 	}
 
-	public int crossElement(int[][] box, int bingo, int element, int limit) {
+	public int crossElement(int[][] box, int bingo,final int element, int limit) {
 
 		try {
 			bingoException.userInputNumber(element, limit);
@@ -145,8 +145,8 @@ public class Resources {
 
 		String[] bingo = { "B", "I", "N", "G", "O" };
 
-		int i = 0, dupLimit = limit;
-		while (dupLimit-- > 0) {
+		int i = 0;
+		while (limit-- > 0) {
 			if (i == bingo.length)
 				i = 0;
 

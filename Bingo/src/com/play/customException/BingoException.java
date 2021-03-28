@@ -26,8 +26,6 @@ public class BingoException extends Exception {
 			
 		if (!calledOutNumbers.add(element))
 			throw new BingoException("Number "+element+" has already been called before, kindly choose a different number.");
-		
-		
 	}
 
 }
